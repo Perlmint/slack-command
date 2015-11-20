@@ -12,15 +12,22 @@ else()
 find_package(Boost 1.52 COMPONENTS date_time filesystem system thread REQUIRED)
 endif()
 
+set(CROW_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/crow)
+set(WEBSOCKET_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/websocketpp)
+
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/include
-  ${CMAKE_CURRENT_SOURCE_DIR}/crow
   ${Boost_INCLUDE_DIR}
   )
 
 macro(crow_executable name)
   add_executable(${name} ${ARGN})
   target_link_libraries(${name} ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+  SET_CPP_STD(MODE TARGET VERSION 14 ${name})
+endmacro()
+
+macro(websocket_executable name)
+  add_executable(${name} ${ARGN})
   SET_CPP_STD(MODE TARGET VERSION 14 ${name})
 endmacro()
 

@@ -1,3 +1,4 @@
-project(slack_command_example)
+project(slack_examples)
 
-crow_executable(echo_command ${CMAKE_CURRENT_SOURCE_DIR}/command_echo.cpp)
+add_subdirectory(command)
+add_subdirectory(rtm)
