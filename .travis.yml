@@ -5,6 +5,8 @@ compiler:
     - g++
     - clang
 
+sudo: false
+
 addons:
   apt:
     sources:
