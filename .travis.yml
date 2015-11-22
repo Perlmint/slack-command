@@ -23,8 +23,12 @@ addons:
 install:
     - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
 
+before_script:
+    - git clone --depth=1 https://github.com/ipkn/crow.git crow/repo
+    - git clone --depth=1 https://github.com/zaphoyd/websocketpp.git websocketpp/repo
+
 script:
     - mkdir build
     - cd build
-    - cmake ..
+    - cmake .. -DEXT_HEADERS_FROM_SOURCE=ON
     - make
