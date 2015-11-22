@@ -14,14 +14,11 @@ addons:
     - boost-latest
     - kalakris-cmake
     packages:
-    - gcc-4.8
-    - g++-4.8
+    - gcc-4.9
+    - g++-4.9
     - libboost1.55-all-dev
     - libssl-dev
     - cmake
-
-install:
-    - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
 
 before_script:
     - git clone --depth=1 https://github.com/ipkn/crow.git crow/repo
