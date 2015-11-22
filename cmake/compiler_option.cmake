@@ -1,3 +1,5 @@
+CMAKE_MINIMUM_REQUIRED( VERSION 2.8.8 FATAL_ERROR )
+
 INCLUDE( CMakeParseArguments )
 INCLUDE( cmake_lib_utils )
 
