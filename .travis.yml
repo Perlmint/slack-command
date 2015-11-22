@@ -2,11 +2,23 @@ language:
     - cpp
 
 compiler:
-    - gcc
+    - g++
     - clang
 
-before_install:
-    - sudo apt-get install libboost-dev libssl-dev
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    - boost-latest
+    packages:
+    - gcc-4.8
+    - g++-4.8
+    - libboost1.55-all-dev
+    - libssl-dev
+    - cmake
+
+install:
+- if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
 
 script:
     - mkdir build
