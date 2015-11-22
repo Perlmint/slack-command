@@ -1,5 +1,5 @@
-# slacpp
 [![Build Status](https://travis-ci.org/Perlmint/slacpp.png)](https://travis-ci.org/Perlmint/slacpp)
+# slacpp
 Slack api header only framework in c++ - slash command server, RTM api and other api
 
 ## Requiements
