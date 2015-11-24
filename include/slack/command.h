@@ -1,8 +1,7 @@
 #include <crow.h>
 #include <map>
 
-#define SLACK_COMMAND_REGISTER(app, url, processor) processor.registerRule(CROW_ROUTE(app, url))
-#define SLACK_COMMAND_ROUTE(processor, command) processor.addHandler(command)
+#define SLACK_COMMAND_REGIST(crow_app, processor, url) processor.regist(CROW_ROUTE(crow_app, url))
 #define SLACK_COMMAND_ARG(request_name) (const slack::command::Request& request_name) -> slack::command::Response
 
 namespace slack
@@ -33,10 +32,6 @@ namespace slack
       {
       }
 
-      void read(const std::string &postBody)
-      {
-      }
-
       void read(const crow::query_string &getParams)
       {
 #define GET_PARAM(name) { \
@@ -56,6 +51,7 @@ namespace slack
         GET_PARAM(command);
         GET_PARAM(text);
         GET_PARAM(response_url);
+#undef GET_PARAM
       }
 
       std::string token;
@@ -100,32 +96,17 @@ namespace slack
     class Processor
     {
     public:
-      Processor(const std::string &token)
-        : token(token)
-      {
-      }
+      Processor() {}
 
-      Processor(const std::string &token, crow::HTTPMethod method)
-        : Processor(token)
+      template<typename RULE>
+      RULE &regist(RULE &rule)
       {
-        this->method = method;
-        methodValidity = method == "GET"_method || method == "POST"_method;
+        rule.methods("GET"_method, "POST"_method)(getHandler());
+        return rule;
       }
 
       using handler_t = std::function<Response(const Request&)>;
       using common_handler_t = std::function<void(const crow::request&, crow::response &)>;
-
-      template<typename RULE>
-      RULE &registerRule(RULE &rule)
-      {
-        if (methodValidity)
-        {
-          rule.methods(method);
-        }
-
-        rule(getHandler());
-        return rule;
-      }
 
       common_handler_t getHandler()
       {
@@ -138,75 +119,69 @@ namespace slack
       void commonHandler(const crow::request &req,
                          crow::response &res)
       {
-        // Error! HTTPMethod not matching
-        if (methodValidity && req.method != method)
-        {
-          CROW_LOG_ERROR << "Wrong method request";
-          return;
-        }
-
-        CROW_LOG_INFO << "request";
         Request request;
         if (req.method == "GET"_method)
         {
           request.read(req.url_params);
         }
+        else if (req.method == "POST"_method)
+        {
+          auto typeItr = req.headers.find("Content-Type");
+          if (typeItr == req.headers.end())
+          {
+          }
+          if (typeItr->second.compare("application/x-www-form-urlencoded") == 0)
+          {
+            request.read(crow::query_string("?" + req.body));
+          }
+          // TODO: parse other types...
+        }
         else
         {
-          request.read(req.body);
-        }
-
-        if (request.token != token)
-        {
-        }
-
-        auto itr = handlerMap.find(request.command);
-        if (itr != handlerMap.end())
-        {
-          auto resp = itr->second(request);
-          res.set_header("content-type", "application/json");
-          res.write(resp.toString());
+          CROW_LOG_ERROR << "Invalid method";
+          res.code = 405;
           res.end();
+          return;
         }
+
+        auto itr = handlerMap.find(std::make_pair(request.command, request.token));
+        if (itr == handlerMap.end())
+        {
+          itr = handlerMap.find(std::make_pair(request.command, ""));
+        }
+        if (itr == handlerMap.end())
+        {
+          CROW_LOG_ERROR << "Not available command or token";
+          res.code = 404;
+          res.end();
+          return;
+        }
+
+        if (itr->second.first != req.method)
+        {
+          res.code = 405;
+          res.end();
+          return;
+        }
+
+        auto resp = itr->second.second(request);
+        res.set_header("content-type", "application/json");
+        res.write(resp.toString());
+        res.end();
       }
 
-      // Temporal object
-      class HandlerAdder
+      void route(const std::string &command,
+                      const std::string &token,
+                      crow::HTTPMethod method,
+                      const handler_t &f)
       {
-      public:
-      HandlerAdder(Processor &processor,
-                   const std::string &command)
-          : processor(processor)
-          , command(command)
-        {
-        }
-
-        void operator()(const handler_t &f)
-        {
-          processor.doAddHandler(command, f);
-        }
-
-      private:
-        std::string command;
-        Processor &processor;
-      };
-
-      HandlerAdder addHandler(const std::string &command)
-      {
-        return HandlerAdder(*this, command);
-      }
-
-      void doAddHandler(const std::string &command, const handler_t &f)
-      {
-        handlerMap.insert(std::make_pair(command, f));
+        handlerMap.insert(std::make_pair(std::make_pair(command, token),
+                                         std::make_pair(method, f)));
       }
 
     private:
-      const std::string token;
-      std::map<std::string, handler_t> handlerMap;
-      // initialize with invalid method
-      crow::HTTPMethod method = static_cast<crow::HTTPMethod>(-1);
-      bool methodValidity = false;
+      std::map<std::pair<std::string, std::string>,
+               std::pair<crow::HTTPMethod, handler_t> > handlerMap;
     };
   }
 }

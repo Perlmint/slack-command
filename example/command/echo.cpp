@@ -6,14 +6,15 @@ int main()
   const std::string token = "";
 
   crow::SimpleApp app;
-  slack::command::Processor commandProcessor(token, "GET"_method);
+  slack::command::Processor commandProcessor;
 
-  SLACK_COMMAND_REGISTER(app, "/", commandProcessor);
-  SLACK_COMMAND_ROUTE(commandProcessor, "/echo")
-    ([] SLACK_COMMAND_ARG(req) {
-      CROW_LOG_INFO << req.command;
-      return slack::command::Response().text(req.text);
-    });
+  SLACK_COMMAND_REGIST(app, commandProcessor, "/");
 
-    app.port(18080).run();
+  commandProcessor.route("/echo", "", "POST"_method,
+                         [] SLACK_COMMAND_ARG(req) {
+                           CROW_LOG_INFO << req.command;
+                           return slack::command::Response().text(req.text);
+                         });
+
+  app.port(18080).run();
 }
