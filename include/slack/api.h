@@ -32,6 +32,7 @@ namespace slack
         , counter(0)
         , api(this)
         , auth(this)
+        , channels(this)
       {
         client.init_asio();
 
@@ -44,6 +45,7 @@ namespace slack
 
       Api api;
       Auth auth;
+      Channels channels;
 
       std::future<void> rtm_begin()
       {

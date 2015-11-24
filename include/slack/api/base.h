@@ -1,5 +1,8 @@
 #pragma once
 
+#include <functional>
+#include <boost/optional.hpp>
+
 #define SLACK_API_BASE_URL "https://slack.com"
 
 namespace slack
@@ -17,7 +20,7 @@ namespace slack
       }
 
     protected:
-      void run(const char *url)
+      void run(const std::string &url, const std::function<void(const std::string&)> & callback)
       {
       }
 

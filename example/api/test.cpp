@@ -8,6 +8,6 @@ int main(int argc, char* argv[])
 
   auto result = client.api.test().foo("hello")();
 
-  std::cout << result.get().foo();
+  std::cout << result.get().foo().value_or("<Not found>");
   return 0;
 }
