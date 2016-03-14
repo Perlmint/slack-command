@@ -8,10 +8,11 @@ int main(int argc, char* argv[])
 
   auto result = client.api.test().foo("hello")();
 
-  auto foo = result.get().foo();
-  if (foo)
+  result.wait();
+  auto args = result.get().args();
+  if (args)
   {
-    std::cout << *foo;
+    std::cout << args.value().at("foo");
   }
   else
   {
