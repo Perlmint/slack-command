@@ -231,8 +231,7 @@ namespace slack
     { \
     public: \
       name(Client *client) \
-        : ApiBase(client) {} \
-      ~name() { puts(#name); }
+        : ApiBase(client) {}
 
 #define API_NAMESPACE_END(); }
 
