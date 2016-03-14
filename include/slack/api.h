@@ -50,8 +50,11 @@ namespace slack
 
         io_thread = std::thread(std::bind(static_cast<size_t (boost::asio::io_service::*)()>(&boost::asio::io_service::run), &service));
       }
+
       virtual ~Client()
       {
+        service.stop();
+        io_thread.join();
       }
 
       Api api;
