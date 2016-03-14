@@ -21,9 +21,11 @@ find_package(OpenSSL 1)
 if(EXT_HEADERS_FROM_SOURCE)
   set(CROW_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/crow/repo/include)
   set(WEBSOCKETPP_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/websocketpp/repo)
+  set(RAPIDJSON_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/rapidjson/repo/include)
 else()
   set(CROW_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/crow)
   set(WEBSOCKETPP_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/websocketpp)
+  set(RAPIDJSON_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/rapidjson)
 endif()
 
 include_directories(

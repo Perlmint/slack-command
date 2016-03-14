@@ -6,3 +6,4 @@ install_manifest.txt
 build
 crow/*.h
 websocketpp/websocketpp
+rapidjson/rapidjson

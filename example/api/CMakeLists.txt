@@ -1,6 +1,6 @@
 project(slack_api_examples)
 
-include_directories(${WEBSOCKETPP_INCLUDE_DIR})
+include_directories(${WEBSOCKETPP_INCLUDE_DIR} ${RAPIDJSON_INCLUDE_DIR})
 
 macro(api_executable name)
   add_executable(${name} ${ARGN})
