@@ -9,7 +9,7 @@ namespace slack
     API_FIELDS_DEF((std::string, foo), \
                    (std::string, error))
 #define ApiTest_RESULT \
-    API_FIELDS_DEF((std::string, foo))
+    API_FIELDS_DEF((str_map_t, args))
 
     API_NAMESPACE_BEGIN(Api)
       API_ENDPOINT(ApiTest, test, "api/api.test");
