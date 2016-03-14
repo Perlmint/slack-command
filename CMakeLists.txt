@@ -28,9 +28,27 @@ else()
   set(RAPIDJSON_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/rapidjson)
 endif()
 
+set(INC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
 include_directories(
-  ${CMAKE_CURRENT_SOURCE_DIR}/include
+  ${INC_DIR}
   ${Boost_INCLUDE_DIR}
   )
 
+set(SLACPP_HDRS
+  ${INC_DIR}/slack/api.h
+  ${INC_DIR}/slack/command.h
+  ${INC_DIR}/slack/api/base.h
+  ${INC_DIR}/slack/api/namespaces.h
+  ${INC_DIR}/slack/api/api.h
+  ${INC_DIR}/slack/api/auth.h
+  ${INC_DIR}/slack/api/chat.h
+  ${INC_DIR}/slack/api/emoji.h
+  ${INC_DIR}/slack/api/error.h
+  ${INC_DIR}/slack/api/rtm.h)
+
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/example)
+
+set(GROUP_PREFIX "Header Files\\slack")
+source_group("${GROUP_PREFIX}" REGULAR_EXPRESSION "slack/[^/]+.h")
+source_group("${GROUP_PREFIX}\\api" REGULAR_EXPRESSION "slack/api/[^/]+.h")
