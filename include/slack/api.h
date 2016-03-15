@@ -69,7 +69,9 @@ namespace slack
 
       std::future<void> rtm_begin()
       {
-        std::string url = rtm.start(token)().get().url().value();
+        auto rtm_begin = rtm.start(token)();
+        rtm_begin.wait();
+        const std::string &url = *rtm_begin.get().url();
         websocketpp::lib::error_code ec;
         client_t::connection_ptr con = client.get_connection(url, ec);
 

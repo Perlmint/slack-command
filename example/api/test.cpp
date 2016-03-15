@@ -12,7 +12,7 @@ int main(int argc, char* argv[])
   auto args = result.get().args();
   if (args)
   {
-    std::cout << args.value().at("foo");
+    std::cout << (*args).at("foo");
   }
   else
   {

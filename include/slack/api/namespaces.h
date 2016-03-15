@@ -86,7 +86,7 @@ namespace slack
   if (BOOST_PP_CAT(_, BOOST_PP_TUPLE_ELEM(2, 1, item))) { \
     BOOST_PP_TUPLE_ELEM(2, 0, data).AddMember(STRINGFY(BOOST_PP_TUPLE_ELEM(2, 1, item)), \
       ToJsonValue( \
-        BOOST_PP_CAT(_, BOOST_PP_TUPLE_ELEM(2, 1, item)).value(), \
+        *(BOOST_PP_CAT(_, BOOST_PP_TUPLE_ELEM(2, 1, item))),  \
         BOOST_PP_TUPLE_ELEM(2, 1, data)), \
       BOOST_PP_TUPLE_ELEM(2, 1, data)); \
   }
