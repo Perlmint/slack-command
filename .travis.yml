@@ -24,6 +24,7 @@ before_script:
 # download external headers
     - git clone --depth=1 https://github.com/ipkn/crow.git crow/repo
     - git clone --depth=1 https://github.com/zaphoyd/websocketpp.git websocketpp/repo
+    - git clone --depth=1 https://github.com/miloyip/rapidjson rapidjson/repo
 # use g++4.9
     - if [ "$CXX" = "g++" ]; then export CXX="g++-4.9" CC="gcc-4.9"; fi
 
